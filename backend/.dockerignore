@@ -1,0 +1,15 @@
+node_modules
+npm-debug.log
+yarn-error.log
+.git
+.gitignore
+.env
+.env.*
+coverage
+*.test.js
+tests
+.eslintrc.json
+jest.config.js
+backups
+logs
+*.log
