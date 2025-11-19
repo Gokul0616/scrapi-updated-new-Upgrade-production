@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import Dict, Any, Optional, List
 import os
 from dotenv import load_dotenv
-from tasks import scrape_task
+from tasks import scrape_task, enrich_websites_task
 from celery.result import AsyncResult
 from celery_app import celery_app
 from proxy_manager import ProxyManager
