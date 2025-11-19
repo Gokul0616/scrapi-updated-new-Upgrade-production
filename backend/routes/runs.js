@@ -542,4 +542,61 @@ router.post('/abort-bulk', authMiddleware, async (req, res) => {
   }
 });
 
+// Enrichment update endpoint - receives enriched data from Python service
+router.post('/:runId/enrich-update', async (req, res) => {
+  try {
+    const { runId } = req.params;
+    const { enrichedPlace } = req.body;
+    
+    if (!enrichedPlace) {
+      return res.status(400).json({ error: 'enrichedPlace is required' });
+    }
+    
+    // Find the run
+    const run = await Run.findOne({ runId });
+    
+    if (!run) {
+      return res.status(404).json({ error: 'Run not found' });
+    }
+    
+    // Find and update the specific place in the output array
+    const placeIdentifier = enrichedPlace.placeId || enrichedPlace.url;
+    
+    if (Array.isArray(run.output)) {
+      const placeIndex = run.output.findIndex(
+        place => place.placeId === placeIdentifier || place.url === placeIdentifier
+      );
+      
+      if (placeIndex !== -1) {
+        // Update the place with enriched data
+        run.output[placeIndex] = {
+          ...run.output[placeIndex],
+          ...enrichedPlace
+        };
+        
+        // Mark the field as modified for Mongoose to save it
+        run.markModified('output');
+        await run.save();
+        
+        console.log(`✅ Updated enrichment for ${enrichedPlace.title || 'Unknown'} in run ${runId}`);
+        
+        // Emit WebSocket event for enrichment update
+        try {
+          emitRunUpdate(run.userId, run.toObject());
+        } catch (wsError) {
+          console.error('WebSocket emission error:', wsError);
+        }
+        
+        return res.json({ success: true, message: 'Enrichment updated' });
+      }
+    }
+    
+    res.status(404).json({ error: 'Place not found in run output' });
+    
+  } catch (error) {
+    console.error('Error updating enrichment:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;
