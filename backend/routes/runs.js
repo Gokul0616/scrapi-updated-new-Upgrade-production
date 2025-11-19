@@ -333,6 +333,23 @@ async function monitorScraperTask(runId, actorId, userId) {
           { $inc: { 'stats.runs': 1 } }
         );
         
+        // Trigger background enrichment for Google Maps (if successful)
+        if (run.status === 'succeeded' && actorId === 'google-maps' && Array.isArray(result.data) && result.data.length > 0) {
+          try {
+            console.log(`🔍 Triggering background enrichment for ${result.data.length} places in run ${runId}`);
+            
+            await axios.post(`${SCRAPER_SERVICE_URL}/enrich`, {
+              run_id: runId,
+              places_data: result.data
+            });
+            
+            console.log(`✅ Enrichment task queued for run ${runId}`);
+          } catch (enrichError) {
+            console.error('Failed to queue enrichment task:', enrichError);
+            // Don't fail the run if enrichment fails to queue
+          }
+        }
+        
         return;
         
       } else if (taskStatus.status === 'FAILURE') {
