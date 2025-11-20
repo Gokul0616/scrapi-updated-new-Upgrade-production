@@ -674,6 +674,114 @@ export function RunDetail() {
                           </TabsContent>
                         </Tabs>
                       </>
+                    ) : isAmazonScraper ? (
+                      /* Amazon Product Column Display */
+                      <>
+                        <Tabs value={resultsTab} onValueChange={setResultsTab} className="w-full">
+                          <TabsList className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent">
+                            <TabsTrigger value="overview" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">Overview</TabsTrigger>
+                            <TabsTrigger value="pricing" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">Pricing</TabsTrigger>
+                            <TabsTrigger value="ratingsReviews" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">Ratings & Reviews</TabsTrigger>
+                            <TabsTrigger value="availability" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">Availability</TabsTrigger>
+                            <TabsTrigger value="media" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">Media</TabsTrigger>
+                            <TabsTrigger value="productDetails" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">Product Details</TabsTrigger>
+                            <TabsTrigger value="specifications" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">Specifications</TabsTrigger>
+                            <TabsTrigger value="sellerInfo" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">Seller Info</TabsTrigger>
+                            <TabsTrigger value="additional" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">Additional</TabsTrigger>
+                            <TabsTrigger value="allFields" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">All Fields</TabsTrigger>
+                            <TabsTrigger value="rawJson" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary">Raw JSON</TabsTrigger>
+                          </TabsList>
+
+                          {/* Render table for each tab */}
+                          {Object.entries(AMAZON_COLUMNS).map(([tabKey, columns]) => (
+                            <TabsContent key={tabKey} value={tabKey} className="mt-0">
+                              {columns.length === 0 ? (
+                                <div className="text-center py-12 text-muted-foreground">
+                                  <p>No data available</p>
+                                </div>
+                              ) : (
+                                <div className="overflow-x-auto">
+                                  <table className="w-full">
+                                    <thead className="border-b bg-muted/50 sticky top-0">
+                                      <tr className="text-sm text-muted-foreground">
+                                        <th className="text-left p-4 font-medium w-12 bg-muted/50">#</th>
+                                        {columns.map((col) => (
+                                          <th key={col.key} className="text-left p-4 font-medium min-w-[150px] bg-muted/50 whitespace-nowrap">
+                                            {col.label}
+                                          </th>
+                                        ))}
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {paginatedOutput.map((item, index) => (
+                                        <tr key={startIndex + index} className="border-b hover:bg-muted/50 transition-colors">
+                                          <td className="p-4 text-sm text-muted-foreground font-mono bg-muted/30">
+                                            {startIndex + index + 1}
+                                          </td>
+                                          {columns.map((col) => {
+                                            const value = col.nested ? getNestedValue(item, col.key) : item[col.key];
+                                            return (
+                                              <td key={col.key} className="p-4 text-sm align-top">
+                                                <RenderCellValue value={value} type={col.type} fieldKey={col.key} />
+                                              </td>
+                                            );
+                                          })}
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              )}
+                            </TabsContent>
+                          ))}
+
+                          {/* All Fields Tab */}
+                          <TabsContent value="allFields" className="mt-0">
+                            <div className="overflow-x-auto">
+                              <table className="w-full">
+                                <thead className="border-b bg-muted/50 sticky top-0">
+                                  <tr className="text-sm text-muted-foreground">
+                                    <th className="text-left p-4 font-medium w-12 bg-muted/50">#</th>
+                                    {Object.values(AMAZON_COLUMNS).flat().map((col) => (
+                                      <th key={col.key} className="text-left p-4 font-medium min-w-[150px] bg-muted/50 whitespace-nowrap">
+                                        {col.label}
+                                      </th>
+                                    ))}
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {paginatedOutput.map((item, index) => (
+                                    <tr key={startIndex + index} className="border-b hover:bg-muted/50 transition-colors">
+                                      <td className="p-4 text-sm text-muted-foreground font-mono bg-muted/30">
+                                        {startIndex + index + 1}
+                                      </td>
+                                      {Object.values(AMAZON_COLUMNS).flat().map((col) => {
+                                        const value = col.nested ? getNestedValue(item, col.key) : item[col.key];
+                                        return (
+                                          <td key={col.key} className="p-4 text-sm align-top">
+                                            <RenderCellValue value={value} type={col.type} fieldKey={col.key} />
+                                          </td>
+                                        );
+                                      })}
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </TabsContent>
+
+                          {/* Raw JSON Tab */}
+                          <TabsContent value="rawJson" className="mt-0">
+                            <div className="p-4">
+                              <ScrollArea className="h-[600px] w-full">
+                                <pre className="bg-muted p-4 rounded text-xs overflow-x-auto font-mono">
+                                  {JSON.stringify(paginatedOutput, null, 2)}
+                                </pre>
+                              </ScrollArea>
+                            </div>
+                          </TabsContent>
+                        </Tabs>
+                      </>
                     ) : (
                       /* Dynamic Column Display for other scrapers */
                       <div className="overflow-x-auto">
