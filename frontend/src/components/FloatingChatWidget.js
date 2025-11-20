@@ -39,18 +39,13 @@ const FloatingChatWidget = () => {
       const perms = response.data.permissions;
       setPermissions(perms);
 
-      // Show permission modal if not enabled yet
-      if (!perms.enabled) {
-        setShowPermissionModal(true);
-      } else {
-        // Add welcome message
-        if (messages.length === 0) {
-          setMessages([{
-            role: 'assistant',
-            content: `Hi ${user.username}! 👋 I'm your AI assistant. I can help you query your data, trigger scraping tasks, analyze results, and much more. What would you like to do today?`,
-            timestamp: new Date()
-          }]);
-        }
+      // Add welcome message if permissions are already set
+      if (perms.enabled && messages.length === 0) {
+        setMessages([{
+          role: 'assistant',
+          content: `Hi ${user.username}! 👋 I'm your AI assistant. I can help you query your data, trigger scraping tasks, analyze results, and much more. What would you like to do today?`,
+          timestamp: new Date()
+        }]);
       }
     } catch (error) {
       console.error('Failed to check permissions:', error);
