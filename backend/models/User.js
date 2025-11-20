@@ -104,6 +104,20 @@ const userSchema = new mongoose.Schema({
       default: true
     }
   },
+  chatbotPermissions: {
+    enabled: {
+      type: Boolean,
+      default: false
+    },
+    fullAccess: {
+      type: Boolean,
+      default: false
+    },
+    lastUpdated: {
+      type: Date,
+      default: null
+    }
+  },
   createdAt: {
     type: Date,
     default: Date.now
