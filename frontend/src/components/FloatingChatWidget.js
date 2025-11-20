@@ -70,6 +70,11 @@ const FloatingChatWidget = () => {
         content: `Hi ${user.username}! 👋 I'm your AI assistant with ${fullAccess ? 'full access' : 'read-only access'} to your data. I can help you query your data, ${fullAccess ? 'trigger scraping tasks, ' : ''}analyze results, and much more. What would you like to do today?`,
         timestamp: new Date()
       }]);
+
+      // If user had typed a message before granting permission, send it now
+      if (inputMessage.trim()) {
+        setTimeout(() => sendMessage(), 500);
+      }
     } catch (error) {
       toast.error('Failed to set permissions');
     }
