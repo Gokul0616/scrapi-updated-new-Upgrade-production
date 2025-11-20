@@ -189,7 +189,7 @@ export function ImageGalleryModal({
             ) : (
               <img
                 src={typeof currentItem === 'string' ? currentItem : currentItem?.url}
-                alt={`Product image ${currentIndex + 1}`}
+                alt={`Product ${currentIndex + 1}`}
                 className={`max-w-full max-h-full object-contain transition-transform duration-200 rounded ${
                   isZoomed ? 'scale-150 cursor-zoom-out' : 'cursor-zoom-in'
                 }`}
