@@ -53,7 +53,7 @@ const GOOGLE_MAPS_COLUMNS = {
     { key: 'socialMedia', label: 'Social Media Links', type: 'complex' }
   ],
   media: [
-    { key: 'images', label: 'Images', type: 'array' }
+    { key: 'images', label: 'Images', type: 'gallery' }
   ],
   reviews: [
     { key: 'reviews', label: 'Reviews', type: 'array' }
