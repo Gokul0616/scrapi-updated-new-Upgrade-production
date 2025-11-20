@@ -97,6 +97,7 @@ function AppContent() {
       </Routes>
       <Toaster />
       <Sonner />
+      {isAuthenticated && <FloatingChatWidget />}
     </div>
   );
 }
