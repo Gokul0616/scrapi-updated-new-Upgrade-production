@@ -29,6 +29,7 @@ import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
 import { Toaster } from "./components/ui/toaster";
 import { Toaster as Sonner } from "./components/ui/sonner";
+import FloatingChatWidget from "./components/FloatingChatWidget";
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
