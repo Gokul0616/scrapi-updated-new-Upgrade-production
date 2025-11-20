@@ -629,7 +629,7 @@ export function RunDetail() {
                                             const value = col.nested ? getNestedValue(item, col.key) : item[col.key];
                                             return (
                                               <td key={col.key} className="p-4 text-sm align-top">
-                                                <RenderCellValue value={value} type={col.type} fieldKey={col.key} showAllSocialMedia={tabKey === 'socialMedia'} />
+                                                <RenderCellValue value={value} type={col.type} fieldKey={col.key} showAllSocialMedia={tabKey === 'socialMedia'} rowData={item} rowIndex={startIndex + index} />
                                               </td>
                                             );
                                           })}
