@@ -338,6 +338,11 @@ export function RunDetail() {
     return run?.actorId === 'google-maps';
   }, [run?.actorId]);
   
+  // Check if this is an Amazon scraper run
+  const isAmazonScraper = useMemo(() => {
+    return run?.actorId === 'amazon';
+  }, [run?.actorId]);
+  
   // Check if any result has social media data
   const hasSocialMediaData = useMemo(() => {
     if (!isGoogleMapsScraper || !resultsData || resultsData.length === 0) {
