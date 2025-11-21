@@ -481,7 +481,7 @@ router.post('/chat', auth, async (req, res) => {
 router.post('/permissions', auth, async (req, res) => {
   try {
     const { fullAccess } = req.body;
-    const userId = req.user.userId;
+    const userId = req.userId;  // Fixed: use req.userId instead of req.user.userId
 
     const user = await User.findByIdAndUpdate(
       userId,
