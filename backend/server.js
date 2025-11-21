@@ -33,7 +33,7 @@ app.use(helmet());
 
 // Trust proxy - required when running behind Kubernetes ingress or reverse proxy
 // This allows Express to properly read X-Forwarded-* headers
-app.set('trust proxy', true);
+app.set('trust proxy', 1);
 
 // Rate limiting configuration
 const limiter = rateLimit({
@@ -42,6 +42,10 @@ const limiter = rateLimit({
   message: 'Too many requests from this IP, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,
+  validate: {
+    xForwardedForHeader: false,  // Disable validation for X-Forwarded-For
+    trustProxy: false             // Disable trust proxy validation
+  }
 });
 
 // Strict rate limiting for authentication endpoints
@@ -52,6 +56,10 @@ const authLimiter = rateLimit({
   skipSuccessfulRequests: true, // Don't count successful requests
   standardHeaders: true,
   legacyHeaders: false,
+  validate: {
+    xForwardedForHeader: false,  // Disable validation for X-Forwarded-For
+    trustProxy: false             // Disable trust proxy validation
+  }
 });
 
 // Create HTTP server
