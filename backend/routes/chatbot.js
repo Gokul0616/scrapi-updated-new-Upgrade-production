@@ -373,7 +373,7 @@ function parseToolCalls(content) {
 router.post('/chat', auth, async (req, res) => {
   try {
     const { message, conversationHistory = [] } = req.body;
-    const userId = req.user.userId;
+    const userId = req.userId;  // Fixed: use req.userId instead of req.user.userId
 
     if (!message) {
       return res.status(400).json({ error: 'Message is required' });
