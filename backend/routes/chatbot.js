@@ -514,7 +514,7 @@ router.post('/permissions', auth, async (req, res) => {
  */
 router.get('/permissions', auth, async (req, res) => {
   try {
-    const userId = req.user.userId;
+    const userId = req.userId;  // Fixed: use req.userId instead of req.user.userId
     const user = await User.findById(userId);
 
     if (!user) {
