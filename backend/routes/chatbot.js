@@ -13,15 +13,26 @@ const OPENROUTER_API_KEY = 'sk-or-v1-138354fded73eaf6c1919071f4fa1d424e963541a4d
 const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const MODEL = 'google/gemini-3-pro-preview';
 
-// Emergent LLM configuration (Fallback)
+// Fallback LLM configuration
 const EMERGENT_LLM_KEY = process.env.EMERGENT_LLM_KEY;
-const FALLBACK_MODEL = 'gpt-4o';
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const FALLBACK_MODEL = 'gpt-4o-mini'; // Use mini for cost effectiveness
 
-// Initialize OpenAI client for fallback
-const openaiClient = new OpenAI({
-  apiKey: EMERGENT_LLM_KEY,
-  baseURL: 'https://llm.kindo.ai/v1'
-});
+// Initialize OpenAI client for fallback (try Emergent first, then OpenAI)
+let fallbackClient = null;
+if (EMERGENT_LLM_KEY) {
+  // Try Kindo endpoint with Emergent key
+  fallbackClient = {
+    type: 'emergent',
+    apiKey: EMERGENT_LLM_KEY
+  };
+} else if (OPENAI_API_KEY) {
+  // Use OpenAI as fallback
+  fallbackClient = {
+    type: 'openai',
+    client: new OpenAI({ apiKey: OPENAI_API_KEY })
+  };
+}
 
 // System prompt for the agentic chatbot
 const SYSTEM_PROMPT = `You are an intelligent AI assistant integrated into Scrapi, a web scraping platform. You have access to the user's database and can perform various operations to help them.
