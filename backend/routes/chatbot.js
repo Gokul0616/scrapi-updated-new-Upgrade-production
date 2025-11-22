@@ -1,16 +1,27 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const OpenAI = require('openai');
 const User = require('../models/User');
 const Run = require('../models/Run');
 const Actor = require('../models/Actor');
 const logger = require('../utils/logger');
 const auth = require('../middleware/auth');
 
-// OpenRouter API configuration
+// OpenRouter API configuration (Primary)
 const OPENROUTER_API_KEY = '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';
 const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const MODEL = 'google/gemini-3-pro-preview';
+
+// Emergent LLM configuration (Fallback)
+const EMERGENT_LLM_KEY = process.env.EMERGENT_LLM_KEY;
+const FALLBACK_MODEL = 'gpt-4o';
+
+// Initialize OpenAI client for fallback
+const openaiClient = new OpenAI({
+  apiKey: EMERGENT_LLM_KEY,
+  baseURL: 'https://llm.kindo.ai/v1'
+});
 
 // System prompt for the agentic chatbot
 const SYSTEM_PROMPT = `You are an intelligent AI assistant integrated into Scrapi, a web scraping platform. You have access to the user's database and can perform various operations to help them.
