@@ -540,13 +540,13 @@ router.post('/chat', auth, async (req, res) => {
       usedFallback = assistantResponse.usedFallback;
       reasoningDetails = assistantResponse.reasoning;
     } catch (openRouterError) {
-      // Fallback: Use Emergent LLM key
-      logger.info('Falling back to Emergent LLM due to OpenRouter failure');
+      // Fallback: Use Fallback LLM (Emergent or OpenAI)
+      logger.info('Falling back to alternative LLM due to OpenRouter failure');
       try {
-        assistantResponse = await callEmergentLLM(messages);
+        assistantResponse = await callFallbackLLM(messages);
         usedFallback = assistantResponse.usedFallback;
       } catch (fallbackError) {
-        logger.error('Both OpenRouter and Emergent LLM failed:', fallbackError.message);
+        logger.error('Both OpenRouter and fallback LLM failed:', fallbackError.message);
         return res.status(500).json({ 
           error: 'All AI services are currently unavailable. Please try again later.',
           details: 'Both primary and fallback services failed'
