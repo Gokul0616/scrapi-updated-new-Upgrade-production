@@ -587,7 +587,7 @@ router.post('/chat', auth, async (req, res) => {
       } catch (openRouterError) {
         logger.info('Using fallback for follow-up call');
         try {
-          assistantResponse = await callEmergentLLM(followUpMessages);
+          assistantResponse = await callFallbackLLM(followUpMessages);
           content = assistantResponse.content;
           usedFallback = true;
         } catch (fallbackError) {
