@@ -9,13 +9,6 @@ const actorSchema = new mongoose.Schema({
   slug: { type: String, required: true },
   category: { type: String, required: true },
   icon: { type: String },
-  type: {
-    type: String,
-    enum: ['static', 'no-code', 'code'],
-    default: 'static'
-  },
-  definition: { type: Object, default: {} }, // Stores JSON rules for no-code or script content
-  version: { type: String, default: '1.0.0' },
   stats: {
     runs: { type: Number, default: 0 },
     rating: { type: Number, default: 0 },
